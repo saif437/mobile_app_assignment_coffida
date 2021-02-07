@@ -5,8 +5,7 @@ class UserInfoScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      isLoading : true,
-      userInfoData: []
+      isLoading : true
     }
   }
 
@@ -22,9 +21,14 @@ class UserInfoScreen extends Component {
     .then(async(repsonseJson) =>{
       console.log('got user details')
       await AsyncStorage.getItem('@session_token')
+      console.log(repsonseJson)
       this.setState({
         isLoading:false,
-        userInfoData:repsonseJson
+        email:repsonseJson.email,
+        firstName:repsonseJson.first_name,
+        lastName:repsonseJson.last_name
+
+
       })
     })
     .catch((error) =>{
@@ -40,20 +44,19 @@ class UserInfoScreen extends Component {
     if(this.state.isLoading){
       return(
         <View>
-          <ActivityIndicator />
+          <Text>Loading</Text>
         </View>
         )
+    }else{
+      return(
+        <View>
+          <Text>Email : {this.state.email}</Text>
+          <Text>First name : {this.state.firstName}</Text>
+          <Text>Last name : {this.state.lastName}</Text>
+        </View>
+        )
+      } 
     }
-
-    return(
-      <View>
-        <FlatList
-        data={this.state.userInfoData}
-        renderItem={({item})=><Text>{item.item_name}</Text>}
-        keyExtractor={({id},index)=>id}/>
-      </View>
-    )
   }
-}
 
 export default UserInfoScreen

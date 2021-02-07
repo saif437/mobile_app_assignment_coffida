@@ -1,21 +1,69 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity } from 'react-native'
+import { Text, View, TouchableOpacity, AsyncStorage, FlatList } from 'react-native'
 
 class HomeScreen extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      isLoading : true,
+      locationData: []
+    }
+  }
+
+
+
+  getLocations = async () =>{
+    const token = await AsyncStorage.getItem('@session_token')
+    return fetch('http://10.0.2.2:3333/api/1.0.0/find',
+    {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', 'X-Authorization':token  },
+    })
+    .then((repsonse) => repsonse.json())
+    .then(async(repsonseJson) =>{
+      console.log('Locations Found', repsonseJson)
+      await AsyncStorage.getItem('@session_token')
+      this.setState({
+        isLoading:false,
+        locationData:repsonseJson
+      })
+    })
+    .catch((error) =>{
+      console.log(error)
+    })
+  }
+
+  componentDidMount () {
+    this.getLocations()
+  }
   render () {
     const navigation = this.props.navigation
-
-    return (
-      <View>
-        <TouchableOpacity onPress={() => navigation.navigate('Review screen')}>
-          <Text>Review</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Add location screen')}>
-          <Text>Add location</Text>
-        </TouchableOpacity>
-      </View>
-    )
+    if(this.state.isLoading){
+      return(
+        <View>
+          <Text>Loading</Text>
+        </View>
+        )
+    }else{
+      return(
+        <View>
+          <FlatList
+          data={this.state.locationData}
+          renderItem={({ item }) => (
+            <View>
+              <TouchableOpacity onPress={() => navigation.navigate('Location Info screen',{locId:item.location_id.toString(),})}>
+                <View>
+                  <Text>{item.location_name}</Text>
+                  <Text>{item.location_town}</Text>
+                </View>
+              </TouchableOpacity> 
+            </View>
+            )}
+          keyExtractor={({location_id},index) => location_id.toString()} 
+          />
+        </View>
+        )
+      } 
+    }
   }
-}
-
 export default HomeScreen

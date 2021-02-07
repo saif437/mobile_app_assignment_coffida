@@ -10,7 +10,7 @@ import CreateAccountScreen from './components/CreateAccountScreen'
 import HomeScreen from './components/HomeScreen'
 import ReviewScreen from './components/ReviewScreen'
 import UserInfoScreen from './components/UserInfoScreen'
-import AddLocationScreen from './components/AddLocationScreen'
+import LocationInfoScreen from './components/LocationInfoScreen'
 import LogoutScreen from './components/LogoutScreen'
 
 class CoffidaApp extends Component {
@@ -24,7 +24,7 @@ class CoffidaApp extends Component {
           <Stack.Screen name='Home screen' component={DrawerNav} />
           <Stack.Screen name='Review screen' component={ReviewScreen} />
           <Stack.Screen name='User Info Screen' component={UserInfoScreen} />
-          <Stack.Screen name='Add location screen' component={AddLocationScreen} />
+          <Stack.Screen name='Location Info screen' component={LocationInfoScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     )
