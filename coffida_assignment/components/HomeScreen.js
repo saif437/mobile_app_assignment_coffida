@@ -19,7 +19,17 @@ class HomeScreen extends Component {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', 'X-Authorization':token  },
     })
-    .then((repsonse) => repsonse.json())
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json()
+      } else if (response.status === 400) {
+        console.log('Bad request')
+      } else if (response.status === 401){
+        console.log('Unauthorised')
+      }else {
+        console.log('Something went wrong')
+      }
+    })
     .then(async(repsonseJson) =>{
       console.log('Locations Found', repsonseJson)
       await AsyncStorage.getItem('@session_token')

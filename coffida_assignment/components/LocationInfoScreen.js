@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity, AsyncStorage, ScrollView, Alert } from 'react-native'
+import { Heart } from 'react-native-shapes'
+
+
+
 class LocationInfoScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
       isLoading: true,
       locationData: [],
-      locationReviews: []
+      locationReviews: [],
+      favourite: false
     }
   }
 
@@ -16,26 +21,204 @@ class LocationInfoScreen extends Component {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       })
-      .then((repsonse) => repsonse.json())
-      .then((repsonseJson) => {
-        console.log('Locations Found', repsonseJson)
-        this.setState({
-          isLoading: false,
-          locationData: repsonseJson,
-          avgClenlinessRating: repsonseJson.avg_clenliness_rating,
-          avgOverallRating: repsonseJson.avg_overall_rating,
-          avgPriceRating: repsonseJson.avg_price_rating,
-          avgQualityRating: repsonseJson.avg_quality_rating,
-          locationName: repsonseJson.location_name,
-          locationReviews: repsonseJson.location_reviews,
-          locationTown: repsonseJson.location_town,
-          photoPath: repsonseJson.photo_path
+    .then((response) => {
+      if (response.status === 200){
+        return response.json()
+      } else if (response.status === 404){
+        console.log('Not Found')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
+    .then((responseJson) => {
+      console.log('Locations Found', responseJson)
+      this.setState({
+        isLoading: false,
+        locationData: responseJson,
+        avgClenlinessRating: responseJson.avg_clenliness_rating,
+        avgOverallRating: responseJson.avg_overall_rating,
+        avgPriceRating: responseJson.avg_price_rating,
+        avgQualityRating: responseJson.avg_quality_rating,
+        locationName: responseJson.location_name,
+        locationReviews: responseJson.location_reviews,
+        locationTown: responseJson.location_town,
+        photoPath: responseJson.photo_path
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
 
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+  favouriteLocation = async (locId) => {
+    const token = await AsyncStorage.getItem('@session_token')
+    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/favourite',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Authorization':token }
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('OK')
+      } else if (response.status === 400) {
+        console.log('Bad request')
+      } else if (response.status === 401){
+        console.log('Unauthorised')
+      }
+      else if (response.status === 404){
+        console.log('Not Found')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
+    .then(async (responseJson) => {
+      console.log('Favourite a location successfull')
+      await AsyncStorage.getItem('@session_token')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
+
+  unFavouriteLocation = async (locId) => {
+    const token = await AsyncStorage.getItem('@session_token')
+    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/favourite',
+    {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-Authorization':token }
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('OK')
+      } else if (response.status === 401){
+        console.log('Unauthorised')
+      } else if (response.status === 403){
+        console.log('Forbidden')
+      } else if (response.status === 404){
+        console.log('Not Found')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
+    .then(async (responseJson) => {
+      console.log('Unfavourite a location successfull')
+      await AsyncStorage.getItem('@session_token')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
+
+  handleFavourite = () => {
+    this.setState({
+      favourite: !this.state.favourite
+    })
+    this.handleFavouriteBool()
+  }
+
+  handleFavouriteBool = () => {
+    console.log(this.state.favourite)
+    const { locId } = this.props.route.params
+    this.state.favourite ? this.unFavouriteLocation(locId) : this.favouriteLocation(locId)
+  }
+
+  deleteReview = async (locId, revId) => {
+    console.log(revId)
+    const token = await AsyncStorage.getItem('@session_token')
+    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId,
+    {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-Authorization':token }
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('OK')
+      }else if (response.status === 400){
+        console.log('Bad request')
+      } else if (response.status === 401){
+        console.log('Unauthorised')
+      } else if (response.status === 403){
+        console.log('Forbidden')
+        Alert.alert('You can only delete your own review!')
+      } else if (response.status === 404){
+        console.log('Not Found')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
+    .then(async (responseJson) => {
+      console.log('Deleted a review successfully')
+      await AsyncStorage.getItem('@session_token')
+      this.props.navigation.navigate('Home screen')
+
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
+
+  likeReview = async (locId, revId) => {
+    const token = await AsyncStorage.getItem('@session_token')
+    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/like',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Authorization':token }
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('OK')
+      } else if (response.status === 400) {
+        console.log('Bad request')
+      } else if (response.status === 401){
+        console.log('Unauthorised')
+      }
+      else if (response.status === 404){
+        console.log('Not Found')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
+    .then(async (responseJson) => {
+      console.log('Liked a review successfully')
+      await AsyncStorage.getItem('@session_token')
+      this.props.navigation.navigate('Home screen')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
+
+  deletelike = async (locId, revId) => {
+    console.log(revId)
+    const token = await AsyncStorage.getItem('@session_token')
+    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/like',
+    {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-Authorization':token }
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('OK')
+      } else if (response.status === 401){
+        console.log('Unauthorised')
+      } else if (response.status === 403){
+        console.log('Forbidden')
+        Alert.alert('You can only delete your own like!')
+      } else if (response.status === 404){
+        console.log('Not Found')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
+    .then(async (responseJson) => {
+      console.log('Deleted a review successfully')
+      await AsyncStorage.getItem('@session_token')
+      this.props.navigation.navigate('Home screen')
+
+    })
+    .catch((error) => {
+      console.error(error)
+    })
   }
 
   componentDidMount () {
@@ -44,6 +227,9 @@ class LocationInfoScreen extends Component {
   }
 
   render () {
+    const { locId } = this.props.route.params
+    const navigation = this.props.navigation
+    const heartColor = this.state.favourite ? 'red' : 'grey'
     if (this.state.isLoading) {
       return (
         <View>
@@ -60,23 +246,38 @@ class LocationInfoScreen extends Component {
           <Text>Location name : {this.state.locationName}</Text>
           <Text>Location town : {this.state.locationTown}</Text>
           <Text>Photo : {this.state.photoPath}</Text>
+          <TouchableOpacity onPress={() => this.handleFavourite()}>
+            <Heart color={heartColor}/>
+          </TouchableOpacity>
           <FlatList
             data={this.state.locationReviews}
             renderItem={({ item }) => (
               <View>
                 <View>
-                  <Text>Reviews</Text>
+                  <Text>Review</Text>
                   <Text>Clenliness: {item.clenliness_rating}</Text>
-                  <Text>likes: {item.likes}</Text>
+                  <TouchableOpacity onPress={() => this.likeReview(locId,item.review_id)}>
+                    <Text>likes: {item.likes}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.deletelike(locId,item.review_id)}>
+                    <Text>remove like</Text>
+                  </TouchableOpacity>   
                   <Text>Overall rating: {item.overall_rating}</Text>
                   <Text>Price rating: {item.price_rating}</Text>
                   <Text>Quality rating: {item.quality_rating}</Text>
                   <Text>Review: {item.review_body}</Text>
+                  <TouchableOpacity onPress={() => this.deleteReview(locId,item.review_id)}>
+                    <Text>Delete Review</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             )}
             keyExtractor={({ review_id }, index) => review_id.toString()}
           />
+          <TouchableOpacity onPress={() => navigation.navigate('Review screen',{locId,})}>
+            <Text>Add Review</Text>
+          </TouchableOpacity>
+
         </View>
       )
     }

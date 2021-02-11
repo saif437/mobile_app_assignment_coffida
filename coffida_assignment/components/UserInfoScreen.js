@@ -15,9 +15,17 @@ class UserInfoScreen extends Component {
     return fetch('http://10.0.2.2:3333/api/1.0.0/user/' + id,
     {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json', 'X-Authorization':token  },
+      headers: { 'Content-Type': 'application/json', 'X-Authorization':token  }
     })
-    .then((repsonse) => repsonse.json())
+    .then((repsonse) => {
+      if (response.status === 200) {
+        return response.json()
+      } else if (response.status === 401) {
+        console.log('Unauthorised')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
     .then(async(repsonseJson) =>{
       console.log('got user details')
       await AsyncStorage.getItem('@session_token')
