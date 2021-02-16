@@ -5,6 +5,7 @@ class LogoutScreen extends Component {
  
   handleLogout = async () => {
     const token = await AsyncStorage.getItem('@session_token')
+
     return fetch('http://10.0.2.2:3333/api/1.0.0/user/logout',
         {
           method: 'POST',

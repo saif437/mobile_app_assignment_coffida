@@ -12,6 +12,8 @@ import ReviewScreen from './components/ReviewScreen'
 import UserInfoScreen from './components/UserInfoScreen'
 import LocationInfoScreen from './components/LocationInfoScreen'
 import LogoutScreen from './components/LogoutScreen'
+import MapScreen from './components/MapScreen'
+import PhotoScreen from './components/PhotoScreen'
 
 class CoffidaApp extends Component {
   render () {
@@ -25,6 +27,8 @@ class CoffidaApp extends Component {
           <Stack.Screen name='Review screen' component={ReviewScreen} />
           <Stack.Screen name='User Info Screen' component={UserInfoScreen} />
           <Stack.Screen name='Location Info screen' component={LocationInfoScreen} />
+          <Stack.Screen name='Map screen' component={MapScreen} />
+          <Stack.Screen name='Photo screen' component={PhotoScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     )

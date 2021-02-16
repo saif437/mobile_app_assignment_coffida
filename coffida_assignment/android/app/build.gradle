@@ -131,9 +131,12 @@ android {
     defaultConfig {
         applicationId "com.coffida_assignment"
         minSdkVersion rootProject.ext.minSdkVersion
+        missingDimensionStrategy 'react-native-camera', 'general'
+        multiDexEnabled true
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
     }
     splits {
         abi {
@@ -181,6 +184,8 @@ android {
 }
 
 dependencies {
+    implementation "androidx.multidex:multidex:2.0.1"
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

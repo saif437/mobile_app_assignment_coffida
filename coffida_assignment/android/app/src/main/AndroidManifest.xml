@@ -2,6 +2,9 @@
   package="com.coffida_assignment">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
 
     <application
       android:name=".MainApplication"
@@ -22,6 +25,9 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyC0wZBDqAmL8QFQ6wgM5qBBhw8x1y8TYOk"/>
     </application>
 
 </manifest>

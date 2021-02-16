@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, AsyncStorage, FlatList } from 'react-native'
+import { Text, View, TouchableOpacity, AsyncStorage, FlatList, PermissionAndroid } from 'react-native'
+
 
 class HomeScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
       isLoading : true,
-      locationData: []
+      locationData: [],
     }
   }
-
-
 
   getLocations = async () =>{
     const token = await AsyncStorage.getItem('@session_token')
@@ -60,11 +59,16 @@ class HomeScreen extends Component {
           <FlatList
           data={this.state.locationData}
           renderItem={({ item }) => (
-            <View>
+            <View style={{flex:75}}>
               <TouchableOpacity onPress={() => navigation.navigate('Location Info screen',{locId:item.location_id.toString(),})}>
                 <View>
                   <Text>{item.location_name}</Text>
                   <Text>{item.location_town}</Text>
+                </View>
+              </TouchableOpacity> 
+              <TouchableOpacity onPress={() => navigation.navigate('Map screen',{latitude:item.latitude, longitude:item.longitude,})}>
+                <View>
+                  <Text>Show location on Google maps</Text>
                 </View>
               </TouchableOpacity> 
             </View>

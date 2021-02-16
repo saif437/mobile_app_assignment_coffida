@@ -15,6 +15,7 @@ class LoginScreen extends Component {
 
   handleLogin = async (emailParam, passwordParam) => {
     if (emailValidation(emailParam) === true && passwordValidation(passwordParam) === true) {
+
       return fetch('http://10.0.2.2:3333/api/1.0.0/user/login',
         {
           method: 'POST',

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage } from 'react-native'
-
 class ReviewScreen extends Component {
   constructor (props) {
     super(props)
@@ -15,7 +14,8 @@ class ReviewScreen extends Component {
 
   addReview = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
-    return fetch('http://10.0.2.2:3333/api/1.0.0/Location/' + locId + '/review',
+    
+    return fetch('http://10.0.2.2:3333/api/1.0.0/Location/'  + locId + '/review',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Authorization' : token },
@@ -50,9 +50,8 @@ class ReviewScreen extends Component {
       })
   }
 
-
   render () {
-    const { locId } = this.props.route.params
+    const { locId, revId } = this.props.route.params
     const navigation = this.props.navigation
     return (
       <View>
@@ -82,6 +81,12 @@ class ReviewScreen extends Component {
             onChangeText={(reviewBody) => this.setState({ reviewBody })}
             value={this.state.reviewBody}
           />
+          <TouchableOpacity onPress={()=> navigation.navigate('Photo screen')}>
+            <Text>Add photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=> this.addReview(locId)}>
+            <Text>Add review</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     )

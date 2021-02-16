@@ -12,7 +12,8 @@ class UserInfoScreen extends Component {
   getData = async () =>{
     const token = await AsyncStorage.getItem('@session_token')
     const id = await AsyncStorage.getItem('@user_id')
-    return fetch('http://10.0.2.2:3333/api/1.0.0/user/' + id,
+
+    return fetch('http://10.0.2.2:3333/api/1.0.0/user/'  + id,
     {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', 'X-Authorization':token  }

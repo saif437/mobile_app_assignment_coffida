@@ -3,7 +3,6 @@ import { Text, View, FlatList, TouchableOpacity, AsyncStorage, ScrollView, Alert
 import { Heart } from 'react-native-shapes'
 
 
-
 class LocationInfoScreen extends Component {
   constructor (props) {
     super(props)
@@ -16,6 +15,7 @@ class LocationInfoScreen extends Component {
   }
 
   getSpecificLocation (locId) {
+
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId,
       {
         method: 'GET',
@@ -52,6 +52,7 @@ class LocationInfoScreen extends Component {
 
   favouriteLocation = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
+
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/favourite',
     {
       method: 'POST',
@@ -82,6 +83,7 @@ class LocationInfoScreen extends Component {
 
   unFavouriteLocation = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
+
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/favourite',
     {
       method: 'DELETE',
@@ -125,6 +127,7 @@ class LocationInfoScreen extends Component {
   deleteReview = async (locId, revId) => {
     console.log(revId)
     const token = await AsyncStorage.getItem('@session_token')
+
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId,
     {
       method: 'DELETE',
@@ -159,6 +162,7 @@ class LocationInfoScreen extends Component {
 
   likeReview = async (locId, revId) => {
     const token = await AsyncStorage.getItem('@session_token')
+
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/like',
     {
       method: 'POST',
@@ -191,6 +195,7 @@ class LocationInfoScreen extends Component {
   deletelike = async (locId, revId) => {
     console.log(revId)
     const token = await AsyncStorage.getItem('@session_token')
+
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/like',
     {
       method: 'DELETE',
@@ -220,6 +225,31 @@ class LocationInfoScreen extends Component {
       console.error(error)
     })
   }
+
+  getPhoto = (locId, revId) => {
+    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId 
+      + '/review/' + revId + '/photo',
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'image/jpeg' }
+      })
+    .then((response) => {
+      if (response.status === 200){
+        return response.json()
+      } else if (response.status === 404){
+        console.log('Not Found')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
+    .then((responseJson) => {
+      console.log('Got photo', responseJson)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
 
   componentDidMount () {
     const { locId } = this.props.route.params
@@ -266,17 +296,20 @@ class LocationInfoScreen extends Component {
                   <Text>Price rating: {item.price_rating}</Text>
                   <Text>Quality rating: {item.quality_rating}</Text>
                   <Text>Review: {item.review_body}</Text>
+                  
                   <TouchableOpacity onPress={() => this.deleteReview(locId,item.review_id)}>
                     <Text>Delete Review</Text>
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <TouchableOpacity onPress={() => navigation.navigate('Review screen',{locId:locId,revId:item.review_id})}>
+                    <Text>Add Review</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             )}
             keyExtractor={({ review_id }, index) => review_id.toString()}
           />
-          <TouchableOpacity onPress={() => navigation.navigate('Review screen',{locId,})}>
-            <Text>Add Review</Text>
-          </TouchableOpacity>
 
         </View>
       )
