@@ -3,12 +3,14 @@ import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage } fro
 class ReviewScreen extends Component {
   constructor (props) {
     super(props)
+    const { overallRatingParam, priceRatingParam, qualityRatingParam, clenlinessRatingParam, reviewBodyParam } = this.props.route.params
     this.state = {
       overallRating: '',
       priceRating: '',
       qualityRating: '',
       clenlinessRating: '',
-      reviewBody: ''
+      reviewBody: '',
+
     }
   }
 
@@ -50,6 +52,7 @@ class ReviewScreen extends Component {
       })
   }
 
+
   render () {
     const { locId, revId } = this.props.route.params
     const navigation = this.props.navigation
@@ -81,9 +84,6 @@ class ReviewScreen extends Component {
             onChangeText={(reviewBody) => this.setState({ reviewBody })}
             value={this.state.reviewBody}
           />
-          <TouchableOpacity onPress={()=> navigation.navigate('Photo screen')}>
-            <Text>Add photo</Text>
-          </TouchableOpacity>
           <TouchableOpacity onPress={()=> this.addReview(locId)}>
             <Text>Add review</Text>
           </TouchableOpacity>

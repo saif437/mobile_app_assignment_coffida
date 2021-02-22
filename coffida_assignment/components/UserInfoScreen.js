@@ -1,15 +1,17 @@
- import React, { Component } from 'react'
-import { Text, View, FlatList, AsyncStorage, TouchableOpacity, ActivityIndicator } from 'react-native'
+import React, { Component } from 'react'
+import { Text, View, FlatList, AsyncStorage, TouchableOpacity, ScrollView, TextInput } from 'react-native'
 
 class UserInfoScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      isLoading : true
+      isLoading : true,
+
     }
   }
 
   getData = async () =>{
+    console.log('inside fuction')
     const token = await AsyncStorage.getItem('@session_token')
     const id = await AsyncStorage.getItem('@user_id')
 
@@ -18,8 +20,9 @@ class UserInfoScreen extends Component {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', 'X-Authorization':token  }
     })
-    .then((repsonse) => {
+    .then((response) => {
       if (response.status === 200) {
+        console.log('Ok')
         return response.json()
       } else if (response.status === 401) {
         console.log('Unauthorised')
@@ -27,16 +30,18 @@ class UserInfoScreen extends Component {
         console.log('Something went wrong')
       }
     })
-    .then(async(repsonseJson) =>{
+    .then(async(responseJson) =>{
       console.log('got user details')
       await AsyncStorage.getItem('@session_token')
-      console.log(repsonseJson)
+      console.log(responseJson)
       this.setState({
         isLoading:false,
-        email:repsonseJson.email,
-        firstName:repsonseJson.first_name,
-        lastName:repsonseJson.last_name
-
+        email:responseJson.email,
+        firstName:responseJson.first_name,
+        lastName:responseJson.last_name,
+        favouriteLocations:responseJson.favourite_locations,
+        reviews:responseJson.review,
+        likedReviews:responseJson.liked_reviews
 
       })
     })
@@ -48,24 +53,22 @@ class UserInfoScreen extends Component {
   componentDidMount () {
     this.getData()
   }
-
   render(){
-    if(this.state.isLoading){
-      return(
-        <View>
-          <Text>Loading</Text>
-        </View>
-        )
-    }else{
-      return(
-        <View>
-          <Text>Email : {this.state.email}</Text>
-          <Text>First name : {this.state.firstName}</Text>
-          <Text>Last name : {this.state.lastName}</Text>
-        </View>
-        )
-      } 
+    const navigation = this.props.navigation
+    return(
+      <View>
+        <Text>Email : {this.state.email}</Text>
+        <Text>First name : {this.state.firstName}</Text>
+        <Text>Last name : {this.state.lastName}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Update User Info screen',{emailParam:this.state.email,
+          firstNameParam:this.state.firstName, lastNameParam:this.state.lastName,})}>
+          <Text>Update Details</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('Home screen')}>
+          <Text>Go back to Home screen</Text>
+        </TouchableOpacity>
+      </View>
+      )
     }
   }
-
 export default UserInfoScreen
