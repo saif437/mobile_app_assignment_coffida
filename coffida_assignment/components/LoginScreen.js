@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, AsyncStorage} from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, AsyncStorage, StyleSheet} from 'react-native'
+import {Container} from './styled.js'
 import { emailValidation, passwordValidation } from './helperFunctions'
 
 class LoginScreen extends Component {
@@ -50,27 +51,64 @@ class LoginScreen extends Component {
     const navigation = this.props.navigation
 
     return (
-      <View>
+      <View style={styles.container}>
         <TextInput
+          style={styles.InputText} 
           placeholder='Email: '
           onChangeText={(email) => this.setState({ email })}
           value={this.state.email}
         />
         <TextInput
+          style={styles.InputText}
           placeholder='Password: '
           onChangeText={(password) => this.setState({ password })}
           secureTextEntry
           value={this.state.password}
         />
-        <TouchableOpacity onPress={() => this.handleLogin(this.state.email, this.state.password)}>
-          <Text>Login</Text>
+        <TouchableOpacity 
+        style={styles.button}
+        onPress={() => this.handleLogin(this.state.email, this.state.password)}>
+          <Text style={styles.boldText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Create account screen')}>
-          <Text>Create an account</Text>
+        <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Create account screen')}>
+          <Text style={styles.boldText}>Create an account</Text>
         </TouchableOpacity>
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1, 
+    backgroundColor: '#272727'
+  },
+  InputText:{
+    backgroundColor: '#747474',
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderWidth: 5,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    marginBottom: 10,
+    marginTop: 10
+
+  },
+  button:{
+    borderWidth: 5,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    paddingVertical: 10,
+    marginBottom: 10
+  },
+  boldText:{
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#ff652f'
+  }
+})
 
 export default LoginScreen

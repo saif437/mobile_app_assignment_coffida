@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, StyleSheet } from 'react-native'
 
 import { emailValidation, passwordValidation } from './helperFunctions'
 
@@ -52,36 +52,74 @@ class CreateAccountScreen extends Component {
 
   render () {
     return (
-      <View>
+      <View style={styles.container}>
         <ScrollView>
           <TextInput
+            style={styles.InputText}
             placeholder='First name: '
             onChangeText={(firstName) => this.setState({ firstName })}
             value={this.state.firstName}
           />
           <TextInput
+            style={styles.InputText}
             placeholder='Last name: '
             onChangeText={(lastName) => this.setState({ lastName })}
             value={this.state.lastName}
           />
           <TextInput
+            style={styles.InputText}
             placeholder='Email: '
             onChangeText={(email) => this.setState({ email })}
             value={this.state.email}
           />
           <TextInput
+            style={styles.InputText}
             placeholder='Password: '
             onChangeText={(password) => this.setState({ password })}
             secureTextEntry
             value={this.state.password}
           />
-          <TouchableOpacity onPress={() => this.createAccount(this.state.email, this.state.password)}>
-            <Text>Create</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.createAccount(this.state.email, this.state.password)}
+          >
+            <Text style={styles.boldText}>Create</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#272727'
+  },
+  InputText: {
+    backgroundColor: '#747474',
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderWidth: 5,
+    borderColor: '#14a76c',
+    borderRadius: 6,
+    marginBottom: 10,
+    marginTop: 10
+
+  },
+  button: {
+    borderWidth: 5,
+    borderColor: '#14a76c',
+    borderRadius: 6,
+    paddingVertical: 10,
+    marginBottom: 10
+  },
+  boldText: {
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#ff652f'
+  }
+})
 
 export default CreateAccountScreen

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, TouchableOpacity, AsyncStorage, ScrollView, Image, Alert } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity, AsyncStorage, ScrollView, Image, Alert, StyleSheet } from 'react-native'
 import { Heart } from 'react-native-shapes'
 
 
@@ -285,64 +285,88 @@ class LocationInfoScreen extends Component {
     const heartColor = this.state.favourite ? 'red' : 'grey'
     if (this.state.isLoading) {
       return (
-        <View>
-          <Text>Loading</Text>
+        <View style={styles.container}>
+          <Text style={styles.text}>Loading</Text>
         </View>
       )
     } else {
       return (
-        <View>
-          <Text>Average clenliness rating : {this.state.avgClenlinessRating}</Text>
-          <Text>Average overall rating : {this.state.avgOverallRating}</Text>
-          <Text>Average price rating : {this.state.avgPriceRating}</Text>
-          <Text>Average qualtity rating : {this.state.avgQualityRating}</Text>
-          <Text>Location name : {this.state.locationName}</Text>
-          <Text>Location town : {this.state.locationTown}</Text>
-          <View>
-            <TouchableOpacity onPress={() => navigation.navigate('Review screen',{locId:locId})}>
-              <Text>Add Review</Text>
+        <View style={styles.container}>
+          <Text style={styles.boldText}>Average clenliness rating : {this.state.avgClenlinessRating}</Text>
+          <Text style={styles.boldText}>Average overall rating : {this.state.avgOverallRating}</Text>
+          <Text style={styles.boldText}>Average price rating : {this.state.avgPriceRating}</Text>
+          <Text style={styles.boldText}>Average qualtity rating : {this.state.avgQualityRating}</Text>
+          <Text style={styles.boldText}>Location name : {this.state.locationName}</Text>
+          <Text style={styles.boldText}>Location town : {this.state.locationTown}</Text>
+          
+          <View style={styles.rowContainer}>
+            <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('Review screen',{locId:locId})}>
+              <Text style={styles.boldText}>Add Review</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.handleFavourite()}>
+              <Heart style={styles.heart} color={heartColor}/>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => this.handleFavourite()}>
-            <Heart color={heartColor}/>
-          </TouchableOpacity>
+
           <FlatList
             data={this.state.locationReviews}
             renderItem={({ item }) => (
-              <View>
-                <Text>Review</Text>
-                <TouchableOpacity onPress={() => this.likeReview(locId,item.review_id)}>
-                  <Text>likes: {item.likes}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.deletelike(locId,item.review_id)}>
-                  <Text>remove like</Text>
-                </TouchableOpacity>   
-                <Text>Overall rating: {item.overall_rating}</Text>
-                <Text>Price rating: {item.price_rating}</Text>
-                <Text>Quality rating: {item.quality_rating}</Text>
-                <Text>Clenliness: {item.clenliness_rating}</Text>
-                <Text>Review: {item.review_body}</Text>  
-                <TouchableOpacity onPress={() => this.deleteReview(locId,item.review_id)}>
-                  <Text>Delete Review</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Update Review screen',{locId:locId, revId: item.review_id.toString(),
-                 overRatingParam: item.overall_rating, priceRatingParam: item.price_rating, qualityRatingParam: item.quality_rating,
-                 clenlinessRatingParam: item.clenliness_rating, reviewBodyParam: item.review_body }) }>
-                  <Text>Update Review</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                onPress={()=> navigation.navigate('Photo screen',{locId:locId,revId:item.review_id.toString()})}>
-                  <Text>Add photo</Text>
-                </TouchableOpacity>
+              <ScrollView>
+                <Text style={styles.boldText}>Review</Text>
+                <View style={styles.rowContainer}>
+                  <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => this.likeReview(locId,item.review_id)}>
+                    <Text style={styles.boldText}>likes: {item.likes}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => this.deletelike(locId,item.review_id)}>
+                    <Text style={styles.boldText}>remove like</Text>
+                  </TouchableOpacity>   
+                </View>
 
-                <Image source = {{
-                  uri:'http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review/' + item.review_id.toString() + '/photo'}}
-                  style = {{ width: 50, height: 50 }}/>
+                <Text style={styles.text}>Overall rating: {item.overall_rating}</Text>
+                <Text style={styles.text}>Price rating: {item.price_rating}</Text>
+                <Text style={styles.text}>Quality rating: {item.quality_rating}</Text>
+                <Text style={styles.text}>Clenliness: {item.clenliness_rating}</Text>
+                <Text style={styles.text}>Review: {item.review_body}</Text>  
+                
+                <View style={styles.rowContainer}>
+                  <TouchableOpacity 
+                  style={styles.button}
+                  onPress={() => this.deleteReview(locId,item.review_id)}>
+                    <Text style={styles.boldText}>Delete Review</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                  style={styles.button}
+                  onPress={() => navigation.navigate('Update Review screen',{locId:locId, revId: item.review_id.toString(),
+                   overRatingParam: item.overall_rating, priceRatingParam: item.price_rating, qualityRatingParam: item.quality_rating,
+                   clenlinessRatingParam: item.clenliness_rating, reviewBodyParam: item.review_body }) }>
+                    <Text style={styles.boldText}>Update Review</Text>
+                  </TouchableOpacity>
+                </View>
 
-                <TouchableOpacity onPress={()=> this.deletePhoto(locId, item.review_id.toString())}>
-                  <Text>Delete photo</Text>
-                </TouchableOpacity>
-              </View>
+                <View style={styles.rowContainer}>
+                  <TouchableOpacity
+                  style={styles.button}
+                  onPress={()=> navigation.navigate('Photo screen',{locId:locId,revId:item.review_id.toString()})}>
+                    <Text style={styles.boldText}>Add photo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                  style={styles.button}
+                  onPress={()=> this.deletePhoto(locId, item.review_id.toString())}>
+                    <Text style={styles.boldText}>Delete photo</Text>
+                  </TouchableOpacity>
+                </View>
+                <Image 
+                source = {{uri:'http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review/' + item.review_id.toString() + '/photo'}} 
+                style = {styles.image}/>
+              </ScrollView>
             )}
             keyExtractor={({ review_id }, index) => review_id.toString()}
           />
@@ -352,4 +376,49 @@ class LocationInfoScreen extends Component {
   }
 }
 
+const styles = StyleSheet.create({
+  container:{
+    flex: 1, 
+    backgroundColor: '#272727',
+    justifyContent: 'flex-start',
+  },
+  rowContainer:{
+    flexDirection: 'row',
+  },
+  button:{
+    width:'25%',
+    borderWidth: 5,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    paddingVertical: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    marginTop: 10,
+    marginBottom: 10
+  },
+  text:{
+    fontSize: 16,
+    color: '#ff652f'
+  },
+  boldText:{
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ff652f'
+  },
+  image:{
+    width: 100,
+    height: 50,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+  },
+  heart:{
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    marginRight: 40,
+    marginLeft: 40,
+    marginTop: 40,
+    marginBottom: 40
+
+  }
+})
 export default LocationInfoScreen

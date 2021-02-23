@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, AsyncStorage } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, AsyncStorage, StyleSheet } from 'react-native'
 
 class LogoutScreen extends Component {
  
@@ -34,17 +34,40 @@ class LogoutScreen extends Component {
   render(){
     const navigation = this.props.navigation
     return(
-      <View>
-        <Text>Are you sure you want to log out?</Text>
-        <TouchableOpacity onPress={() => this.handleLogout()}>
-          <Text>Yes</Text>
+      <View style={styles.container}>
+        <Text style={styles.boldText}>Are you sure you want to log out?</Text>
+        <TouchableOpacity style={styles.button} onPress={() => this.handleLogout()}>
+          <Text style={styles.boldText}>Yes</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Home screen')}>
-          <Text>No</Text>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home screen')}>
+          <Text style={styles.boldText}>No</Text>
         </TouchableOpacity>
       </View>
       )
   }
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1, 
+    backgroundColor: '#272727',
+
+  },
+  button:{
+    borderWidth: 5,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    paddingVertical: 10,
+    marginTop: 10,
+    marginBottom: 10
+  },
+  boldText:{
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#ff652f'
+  }
+})
+
 
 export default LogoutScreen

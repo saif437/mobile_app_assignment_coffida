@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
 class UpdateReviewScreen extends Component {
   constructor (props) {
     super(props)
@@ -75,40 +75,71 @@ class UpdateReviewScreen extends Component {
     const { locId, revId } = this.props.route.params
     const navigation = this.props.navigation
     return (
-      <View>
+      <View style={styles.container}>
         <ScrollView>
-          <TextInput
+          <TextInput style={styles.InputText}
             placeholder='Overall Rating: '
             onChangeText={(overallRating) => this.setState({ overallRating })}
             value={this.state.overallRating}
           />
-          <TextInput
+          <TextInput style={styles.InputText}
             placeholder='Price Rating: '
             onChangeText={(priceRating) => this.setState({ priceRating })}
             value={this.state.priceRating}
           />
-          <TextInput
+          <TextInput style={styles.InputText}
             placeholder='Qualtiy Rating: '
             onChangeText={(qualityRating) => this.setState({ qualityRating })}
             value={this.state.qualityRating}
           />
-          <TextInput
+          <TextInput style={styles.InputText}
             placeholder='Clenliness Rating: '
             onChangeText={(clenlinessRating) => this.setState({ clenlinessRating })}
             value={this.state.clenlinessRating}
           />
-          <TextInput
+          <TextInput style={styles.InputText}
             placeholder='Review Body: '
             onChangeText={(reviewBody) => this.setState({ reviewBody })}
             value={this.state.reviewBody}
           />
-          <TouchableOpacity onPress={()=> this.updateData(locId, revId)}>
-            <Text>Update review</Text>
+          <TouchableOpacity style={styles.button} onPress={()=> this.updateData(locId, revId)}>
+            <Text style={styles.boldText}>Update review</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
     )
   }
 }
+const styles = StyleSheet.create({
+  container:{
+    flex: 1, 
+    backgroundColor: '#272727',
+    justifyContent: 'space-between'
 
+  },
+  InputText:{
+    backgroundColor: '#747474',
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderWidth: 5,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    marginBottom: 10,
+    marginTop: 10
+  },
+  button:{
+    borderWidth: 5,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    paddingVertical: 10,
+    marginTop: 10,
+    marginBottom: 10
+  },
+  boldText:{
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#ff652f'
+  }
+})
 export default UpdateReviewScreen

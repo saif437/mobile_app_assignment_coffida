@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage } from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
 import { RNCamera } from 'react-native-camera'
 
 class PhotoScreen extends Component {
@@ -59,13 +59,33 @@ class PhotoScreen extends Component {
         }}
         />
         <View>
-          <TouchableOpacity onPress={()=> this.addPhoto(locId, revId)}>
-            <Text>Take photo</Text>
+          <TouchableOpacity style={styles.button} onPress={()=> this.addPhoto(locId, revId)}>
+            <Text style={styles.boldText} >Take photo</Text>
           </TouchableOpacity>
         </View>
       </View>
       )
   }
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1, 
+    backgroundColor: '#272727',
+    justifyContent: 'space-between'
+
+  },
+  button:{
+    paddingVertical: 10,
+    marginTop: 10,
+    marginBottom: 10
+  },
+  boldText:{
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#ff652f'
+  }
+})
 
 export default PhotoScreen

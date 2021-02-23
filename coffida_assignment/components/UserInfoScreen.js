@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, AsyncStorage, TouchableOpacity, ScrollView, TextInput } from 'react-native'
+import { Text, View, FlatList, AsyncStorage, TouchableOpacity, ScrollView, TextInput, StyleSheet } from 'react-native'
 
 class UserInfoScreen extends Component {
   constructor (props) {
@@ -56,19 +56,46 @@ class UserInfoScreen extends Component {
   render(){
     const navigation = this.props.navigation
     return(
-      <View>
-        <Text>Email : {this.state.email}</Text>
-        <Text>First name : {this.state.firstName}</Text>
-        <Text>Last name : {this.state.lastName}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Update User Info screen',{emailParam:this.state.email,
+      <View style={styles.container}>
+        <Text style={styles.text}>Email : {this.state.email}</Text>
+        <Text style={styles.text}>First name : {this.state.firstName}</Text>
+        <Text style={styles.text}>Last name : {this.state.lastName}</Text>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Update User Info screen',{emailParam:this.state.email,
           firstNameParam:this.state.firstName, lastNameParam:this.state.lastName,})}>
-          <Text>Update Details</Text>
+          <Text style={styles.boldText}>Update Details</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigation.navigate('Home screen')}>
-          <Text>Go back to Home screen</Text>
+        <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('Home screen')}>
+          <Text style={styles.boldText}>Go back to Home screen</Text>
         </TouchableOpacity>
       </View>
       )
     }
   }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1, 
+    backgroundColor: '#272727',
+
+  },
+  button:{
+    borderWidth: 5,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    paddingVertical: 10,
+    marginTop: 10,
+    marginBottom: 10
+  },
+  text:{
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#ff652f'
+  },
+  boldText:{
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#ff652f'
+  }
+})
 export default UserInfoScreen
