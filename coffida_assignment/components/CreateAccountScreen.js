@@ -85,6 +85,12 @@ class CreateAccountScreen extends Component {
           >
             <Text style={styles.boldText}>Create</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate('Login screen')}
+          >
+            <Text style={styles.boldText}>Go Back</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     )

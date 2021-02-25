@@ -58,7 +58,6 @@ class HomeScreen extends Component {
     }else{
       return(
         <View style={styles.container}>
-          <Text style={styles.boldText}>Locations</Text>
           <Picker
           selectedValue={this.state.selectedValue}
           onValueChange={(itemValue)=> this.setState({
