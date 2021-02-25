@@ -4,7 +4,13 @@ import { Text, View, TouchableOpacity, AsyncStorage, FlatList, PermissionsAndroi
 import Geolocation from 'react-native-geolocation-service'
 
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
-
+/* screen for displaying the location of coffee shops on google maps
+will only work if connected to the internet and has access to the playstore
+will find coordinates of a location and will set it to state
+user must accept permissions for the Google maps to work
+function will show the status of permissions and will act based of the result
+display location thorugh MapView
+ */
 class MapScreen extends Component {
   constructor (props) {
     super(props)
@@ -17,7 +23,6 @@ class MapScreen extends Component {
       }
     }
   }
-
   findCoordinates (latitude, longitude) {
     if(!this.state.locationPermission){
       this.state.locationPermission=this.requestLocationPermission();
@@ -43,7 +48,6 @@ class MapScreen extends Component {
       }
       )
   }
-
   requestLocationPermission = async () => {
     try{
       const granted = await PermissionsAndroid.request(

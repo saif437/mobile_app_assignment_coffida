@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import { Text, View, FlatList, AsyncStorage, TouchableOpacity, ActivityIndicator, ScrollView, TextInput, StyleSheet } from 'react-native'
-
+/* 
+screen for updating user info
+user is prompt to enter details by filling in the text inputs
+the information is then stored in state to sent to a patch request where the user's details is updated in the api 
+before the data is sent each state is check their original state and compared to see if any changes are made
+if changes are made a empty list called userInfor get the change state appended to it and sent as the body of the patch request
+*/
 class UserInfoScreen extends Component {
   constructor (props) {
     super(props)
@@ -11,7 +17,6 @@ class UserInfoScreen extends Component {
       origEmail: emailParam,
     }
   }
-
   updateData = async () =>{
     let userInfo = {}
     if(this.state.email != this.state.origEmail){

@@ -1,5 +1,8 @@
+/* Functions for which can be reused elsewhere in this project */
+
+/* functions for validating emails and passwords - reference in create account screen */
+
 export function emailValidation (emailParam) {
-  // add validation here
   // regex express for validating emails
   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   if (emailRegex.test(emailParam) === true) {

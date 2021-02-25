@@ -3,6 +3,11 @@ import { Text, View, TouchableOpacity, TextInput, ScrollView, StyleSheet } from 
 
 import { emailValidation, passwordValidation } from './helperFunctions'
 
+/*
+This screen will provide the user to create an account by providing text input field for the user to register
+and a post request will be made to create a new user details. ResponseJson will be where the details are stored
+checks for validation for correct emails and password before account can be created and sent to the API
+ */
 class CreateAccountScreen extends Component {
   constructor (props) {
     super(props)

@@ -2,7 +2,24 @@ import React, { Component } from 'react'
 import { Text, View, FlatList, TouchableOpacity, AsyncStorage, ScrollView, Image, Alert, StyleSheet } from 'react-native'
 import { Heart } from 'react-native-shapes'
 
-
+/* 
+Majority of the app's functionality is implement here
+Average ratings and reviews are shown
+And functionality surrounding a specific location is also added 
+get request to retrieve information about a specific location 
+once data is retrieved, it is stored in state with the relevant names
+send post request to the api to favourite a location
+ends a delete request to the api to unfavourite a location
+handles the favourite state by setting it to the opposite boolean value of current state
+determines whether the user has favourited or unfavourited by its value (true or false) 
+a location and callsthe right api call depending on the state value
+api called to delete the user's review 
+will only let a user delete its own reviews
+post request to allow the user to like a review
+delete request to remove the user's like of a review
+send a delete request to the api to delete their photo
+shows a blank image when the user hasn't uploaded a photo
+*/
 class LocationInfoScreen extends Component {
   constructor (props) {
     super(props)
@@ -10,7 +27,8 @@ class LocationInfoScreen extends Component {
       isLoading: true,
       locationData: [],
       locationReviews: [],
-      favourite: false
+      favourite: false,
+      imageUri: 'https://static8.depositphotos.com/1009634/988/v/950/depositphotos_9883921-stock-illustration-no-user-profile-picture.jpg'
     }
   }
 
@@ -49,7 +67,6 @@ class LocationInfoScreen extends Component {
       console.log(error)
     })
 }
-
   favouriteLocation = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
 
@@ -80,7 +97,6 @@ class LocationInfoScreen extends Component {
       console.error(error)
     })
   }
-
   unFavouriteLocation = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
 
@@ -225,7 +241,6 @@ class LocationInfoScreen extends Component {
       console.error(error)
     })
   }
-
    deletePhoto = async (locId, revId) => {
     const token = await AsyncStorage.getItem('@session_token')
 
@@ -237,9 +252,6 @@ class LocationInfoScreen extends Component {
     .then((response) => {
       if (response.status === 200) {
         console.log('OK')
-        this.setState({
-          photoDeleted:true
-        })
       } else if (response.status === 401){
         console.log('Unauthorised')
       } else if (response.status === 403){
@@ -254,25 +266,43 @@ class LocationInfoScreen extends Component {
     .then(async (responseJson) => {
       console.log('Deleted a Photo successfully')
       await AsyncStorage.getItem('@session_token')
-      //this.props.navigation.navigate('Home screen')
-      this.showImage()
-
+      this.setState({
+        imageUri: 'https://static8.depositphotos.com/1009634/988/v/950/depositphotos_9883921-stock-illustration-no-user-profile-picture.jpg'
+      })
     })
     .catch((error) => {
       console.error(error)
     })
   }
 
-  showImage = () =>{
-    console.log(this.state.photoDeleted)
-    return(
-      <View>
-        <Image source = {require('./images/blankImage.jpg')} style={{width:50, height:50}}/>
-      </View>
-      )
-    
-  }
+getPhoto = async (locId, revId) => {
 
+    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/photo',
+    {
+      method: 'get',
+      headers: { 'Content-Type': 'image/jpeg' }
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('OK')
+        this.setState({
+          imageUri: 'http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review/' + revId + '/photo'
+        })
+      } else if (response.status === 401){
+        console.log('Unauthorised')
+      } else if (response.status === 403){
+        console.log('Forbidden')
+        Alert.alert('You can only delete your own review!')
+      } else if (response.status === 404){
+        console.log('Not Found')
+      } else {
+        console.log('Something went wrong')
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
 
   componentDidMount () {
     const { locId } = this.props.route.params
@@ -363,9 +393,10 @@ class LocationInfoScreen extends Component {
                     <Text style={styles.boldText}>Delete photo</Text>
                   </TouchableOpacity>
                 </View>
-                <Image 
-                source = {{uri:'http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review/' + item.review_id.toString() + '/photo'}} 
-                style = {styles.image}/>
+                <TouchableOpacity onPress={()=>this.getPhoto(locId, item.review_id.toString())}>
+                  <Text style={styles.boldText}>Get Photo</Text>
+                  <Image source = {{uri:this.state.imageUri}} style = {styles.image}/>
+                </TouchableOpacity>
               </ScrollView>
             )}
             keyExtractor={({ review_id }, index) => review_id.toString()}

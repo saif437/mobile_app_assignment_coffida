@@ -1,6 +1,18 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, AsyncStorage, FlatList, PermissionAndroid, Picker, StyleSheet, ScrollView } from 'react-native'
-//import {Container, Scroll, InputText, PrimaryButton, PrimaryText, Title, Pick, MiniContainer} from './styled.js'
+
+
+/* 
+The main screen for this application, will show a list of locations of different coffee shops with their location 
+get request to retrieve a list of locations stored in responseJson
+async storage is used to access the user's session token which is generated everytime the user logs in
+will automatically call getLocations to display locations immediately 
+flatlist will loop through each element in location data to access information on each locations
+and have access to location ID's which will allowed the user to enter a specifc location
+conditional statement to add a filler text when data is loading 
+Allows users to filter results by sorting
+*/
+
 
 class HomeScreen extends Component {
   constructor (props) {
@@ -11,6 +23,7 @@ class HomeScreen extends Component {
       selectedValue: ''
     }
   }
+
 
   getLocations = async () =>{
     const token = await AsyncStorage.getItem('@session_token')
@@ -47,6 +60,7 @@ class HomeScreen extends Component {
   componentDidMount () {
     this.getLocations()
   }
+
   render () {
     const navigation = this.props.navigation
     if(this.state.isLoading){

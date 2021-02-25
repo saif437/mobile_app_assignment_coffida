@@ -1,11 +1,9 @@
 import 'react-native-gesture-handler'
 
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import LoginScreen from './components/LoginScreen'
@@ -20,11 +18,12 @@ import PhotoScreen from './components/PhotoScreen'
 import UpdateUserInfoScreen from './components/UpdateUserInfoScreen'
 import UpdateReviewScreen from './components/UpdateReviewScreen'
 
-import Icon from 'react-native-vector-icons/Ionicons'
-
+/*
+implementing and stack and tab navigators
+Tab navigator only visible in Home Screen
+added some styling to the navigator
+*/
 class CoffidaApp extends Component {
-  // Stack navigation for the main screens of the app
-  // Drawer navigation is only accesed in the home screen
   render () {
     const Stack = createStackNavigator()
     return (
@@ -50,17 +49,18 @@ class CoffidaApp extends Component {
             }}
           />
           <Stack.Screen
+            name='Home screen'
+            component={TabNav}
+            options={{
+              title: 'Home',
+              headerLeft: null
+            }}
+          />
+          <Stack.Screen
             name='Create account screen'
             component={CreateAccountScreen}
             options={{
               title: 'Register'
-            }}
-          />
-          <Stack.Screen
-            name='Home screen'
-            component={TabNav}
-            options={{
-              title: 'Home'
             }}
           />
           <Stack.Screen
@@ -118,23 +118,27 @@ class CoffidaApp extends Component {
   }
 }
 
+/*
+Tab navigator
+Added some styling to the tab navigator
+*/
 const Tab = createBottomTabNavigator()
 
 function TabNav () {
   return (
     <Tab.Navigator
       tabBarOptions={{
-      	activeTintColor: '#ff652f',
-      	inactiveTintColor: '#ff652f',
-      	tabStyle: {
-      		backgroundColor: '#747474'
-      	},
-      	labelStyle: {
-      		fontSize: 16,
-		    textAlign: 'center',
-		    fontWeight: 'bold',
-		    color: '#ff652f'
-      	}
+        activeTintColor: '#ff652f',
+        inactiveTintColor: '#ff652f',
+        tabStyle: {
+          backgroundColor: '#747474'
+        },
+        labelStyle: {
+          fontSize: 16,
+          textAlign: 'center',
+          fontWeight: 'bold',
+          color: '#ff652f'
+        }
       }}
     >
       <Tab.Screen
@@ -158,13 +162,4 @@ function TabNav () {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'grey'
-  }
-})
-
 export default CoffidaApp
-
-const Drawer = createDrawerNavigator()

@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
+/* 
+screen for updating reviews 
+user is prompt to enter details by filling in the text inputs
+the information is then stored in state to sent to a patch request where the review is updated in the api
+before the data is sent each state is check their original state and compared to see if any changes are made
+if changes are made a empty list called userInfor get the change state appended to it and sent as the body of the patch request 
+*/
 class UpdateReviewScreen extends Component {
   constructor (props) {
     super(props)
@@ -14,7 +21,6 @@ class UpdateReviewScreen extends Component {
 
     }
   }
-
   updateData = async (locId, revId) =>{
     let userInfo = {}
     if(this.state.overallRating != this.state.origOverallRating){

@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, TextInput, AsyncStorage, StyleSheet } from 'react-native'
 
+/* 
+A screen for the user to logout
+A message will be made to the user before they logout asking if they really want to logout
+if yes, user will be log out, if no the user will be directed back to the home page 
+ // api post request to log the user out - sends user to login screen
+*/
 class LogoutScreen extends Component {
- 
   handleLogout = async () => {
     const token = await AsyncStorage.getItem('@session_token')
 

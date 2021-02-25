@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
 import { RNCamera } from 'react-native-camera'
-
+/* 
+screen for taking photos 
+photos are taken through the button displayed below 
+post request to add photo to the api for it to be retrieve in a get request
+RnCamera is the camera functionality
+*/
 class PhotoScreen extends Component {
   constructor (props) {
     super(props)
   }
-
   addPhoto = async (locId, revId) => {
     const token = await AsyncStorage.getItem('@session_token')
     if(this.camera){
@@ -43,7 +47,6 @@ class PhotoScreen extends Component {
         })
       }
     }
-
   render () {
     const { locId, revId } = this.props.route.params
     const navigation = this.props.navigation

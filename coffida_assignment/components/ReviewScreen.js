@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
+/*
+screen for adding reviews 
+user is prompt to enter details by filling in the text inputs
+the information is then stored in state to sent to a post request where the review is added to the api 
+post rquest to add review
+text in the Textinput is being stored in state 
+*/
 class ReviewScreen extends Component {
   constructor (props) {
     super(props)
@@ -13,7 +20,6 @@ class ReviewScreen extends Component {
 
     }
   }
-
   addReview = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
     
@@ -51,7 +57,6 @@ class ReviewScreen extends Component {
         console.error(error)
       })
   }
-
 
   render () {
     const { locId, revId } = this.props.route.params

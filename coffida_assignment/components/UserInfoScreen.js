@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, FlatList, AsyncStorage, TouchableOpacity, ScrollView, TextInput, StyleSheet } from 'react-native'
-
+/* 
+screen showing user's details 
+get request to get the user's details and results are set in state to be displayed in the render function 
+*/
 class UserInfoScreen extends Component {
   constructor (props) {
     super(props)
