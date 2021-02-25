@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, TextInput, AsyncStorage, StyleSheet} from 'react-native'
-import {Container} from './styled.js'
 import { emailValidation, passwordValidation } from './helperFunctions'
 
 /* 
@@ -17,7 +16,7 @@ class LoginScreen extends Component {
       password: ''
     }
   }
-
+  
   handleLogin = async (emailParam, passwordParam) => {
     if (emailValidation(emailParam) === true && passwordValidation(passwordParam) === true) {
 

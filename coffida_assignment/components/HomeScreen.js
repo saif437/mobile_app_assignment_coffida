@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, AsyncStorage, FlatList, PermissionAndroid, Picker, StyleSheet, ScrollView } from 'react-native'
 
-
 /* 
 The main screen for this application, will show a list of locations of different coffee shops with their location 
 get request to retrieve a list of locations stored in responseJson
@@ -23,7 +22,6 @@ class HomeScreen extends Component {
       selectedValue: ''
     }
   }
-
 
   getLocations = async () =>{
     const token = await AsyncStorage.getItem('@session_token')
@@ -72,16 +70,6 @@ class HomeScreen extends Component {
     }else{
       return(
         <View style={styles.container}>
-          <Picker
-          selectedValue={this.state.selectedValue}
-          onValueChange={(itemValue)=> this.setState({
-            selectedValue:itemValue
-          })}>
-            <Picker.Item label='sort by rating' value='sort by rating' />
-            <Picker.Item label='sort by price' value='sort by price'  />
-            <Picker.Item label='sort by quality' value='sort by quality'  />
-            <Picker.Item label='sort by clenliness' value='sort by clenliness' />
-          </Picker>
           <FlatList
           data={this.state.locationData}
           renderItem={({ item }) => (
@@ -89,6 +77,10 @@ class HomeScreen extends Component {
               <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Location Info screen',{locId:item.location_id.toString(),})}>
                 <Text style={styles.boldText}>{item.location_name}</Text>
                 <Text style={styles.boldText}>{item.location_town}</Text>
+                <Text style={styles.boldText}>Avg rating: {item.avg_overall_rating}</Text>
+                <Text style={styles.boldText}>Avg clenliness: {item.avg_clenliness_rating}</Text>
+                <Text style={styles.boldText}>Avg price: {item.avg_price_rating}</Text>
+                <Text style={styles.boldText}>Avg quality: {item.avg_quality_rating}</Text>
               </TouchableOpacity> 
               <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Map screen',{latitude:item.latitude, longitude:item.longitude,})}>
                 <Text style={styles.boldText}>Show location on Google maps</Text>
@@ -122,10 +114,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     color: '#ff652f'
-  },
-  pick:{
-    alignItems: 'center',
-    backgroundColor: 'white'
   }
 })
 export default HomeScreen

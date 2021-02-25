@@ -23,6 +23,7 @@ class MapScreen extends Component {
       }
     }
   }
+
   findCoordinates (latitude, longitude) {
     if(!this.state.locationPermission){
       this.state.locationPermission=this.requestLocationPermission();
@@ -48,6 +49,7 @@ class MapScreen extends Component {
       }
       )
   }
+
   requestLocationPermission = async () => {
     try{
       const granted = await PermissionsAndroid.request(
@@ -92,7 +94,7 @@ class MapScreen extends Component {
         >
           <Marker
             coordinate={this.state.location}
-            title='My location'
+            title='location'
             description='Here I am'
           />
         </MapView>

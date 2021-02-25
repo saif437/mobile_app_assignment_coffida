@@ -288,11 +288,6 @@ getPhoto = async (locId, revId) => {
         this.setState({
           imageUri: 'http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review/' + revId + '/photo'
         })
-      } else if (response.status === 401){
-        console.log('Unauthorised')
-      } else if (response.status === 403){
-        console.log('Forbidden')
-        Alert.alert('You can only delete your own review!')
       } else if (response.status === 404){
         console.log('Not Found')
       } else {
@@ -393,7 +388,7 @@ getPhoto = async (locId, revId) => {
                     <Text style={styles.boldText}>Delete photo</Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={()=>this.getPhoto(locId, item.review_id.toString())}>
+                <TouchableOpacity style={styles.button} onPress={()=>this.getPhoto(locId, item.review_id.toString())}>
                   <Text style={styles.boldText}>Get Photo</Text>
                   <Image source = {{uri:this.state.imageUri}} style = {styles.image}/>
                 </TouchableOpacity>
@@ -421,11 +416,11 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "#14a76c",
     borderRadius: 6,
-    paddingVertical: 10,
-    marginRight: 10,
-    marginLeft: 10,
-    marginTop: 10,
-    marginBottom: 10
+    paddingVertical: 5,
+    marginRight: 5,
+    marginLeft: 5,
+    marginTop: 5,
+    marginBottom: 5
   },
   text:{
     fontSize: 16,

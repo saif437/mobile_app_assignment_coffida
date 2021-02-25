@@ -34,7 +34,7 @@ class CoffidaApp extends Component {
               backgroundColor: '#747474'
             },
             headerTitleStyle: {
-              fontSize: 16,
+              fontSize: 18,
               textAlign: 'center',
               fontWeight: 'bold',
               color: '#ff652f'
@@ -45,7 +45,7 @@ class CoffidaApp extends Component {
             name='Login screen'
             component={LoginScreen}
             options={{
-              title: 'Login'
+              title: 'Coffida'
             }}
           />
           <Stack.Screen
@@ -134,7 +134,7 @@ function TabNav () {
           backgroundColor: '#747474'
         },
         labelStyle: {
-          fontSize: 16,
+          fontSize: 18,
           textAlign: 'center',
           fontWeight: 'bold',
           color: '#ff652f'

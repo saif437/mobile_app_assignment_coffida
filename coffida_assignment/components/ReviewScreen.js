@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
+import { profanityFilter } from './helperFunctions'
+
 /*
 screen for adding reviews 
 user is prompt to enter details by filling in the text inputs
@@ -20,6 +22,9 @@ class ReviewScreen extends Component {
 
     }
   }
+
+
+
   addReview = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
     
@@ -32,7 +37,7 @@ class ReviewScreen extends Component {
           price_rating: parseInt(this.state.priceRating),
           quality_rating: parseInt(this.state.qualityRating),
           clenliness_rating: parseInt(this.state.clenlinessRating),
-          review_body: this.state.reviewBody
+          review_body: profanityFilter(this.state.reviewBody)
         })
       })
       .then((response) => {

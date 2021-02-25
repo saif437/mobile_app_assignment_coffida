@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
+import { profanityFilter } from './helperFunctions'
 /* 
 screen for updating reviews 
 user is prompt to enter details by filling in the text inputs
@@ -36,7 +37,7 @@ class UpdateReviewScreen extends Component {
       userInfo['clenliness_rating'] = parseInt(this.state.qualityRating)
     }
     if(this.state.reviewBody != this.state.origReviewBody){
-      userInfo['review_body'] = this.state.reviewBody
+      userInfo['review_body'] = profanityFilter(this.state.reviewBody)
     }
     console.log(userInfo)
     const token = await AsyncStorage.getItem('@session_token')
