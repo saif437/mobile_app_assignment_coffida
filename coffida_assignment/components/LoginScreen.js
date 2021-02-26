@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, AsyncStorage, StyleSheet} from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, StyleSheet} from 'react-native'
 import { emailValidation, passwordValidation } from './helperFunctions'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 the first screen the user is shown 
 promps the user to log in or register if haven't 

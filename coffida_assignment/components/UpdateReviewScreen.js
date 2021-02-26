@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, StyleSheet, Alert} from 'react-native'
 import { profanityFilter } from './helperFunctions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 screen for updating reviews 
 user is prompt to enter details by filling in the text inputs
@@ -22,7 +23,7 @@ class UpdateReviewScreen extends Component {
 
     }
   }
-  updateData = async (locId, revId) =>{
+  updateData = async (locId, revId) => {
     let userInfo = {}
     if(this.state.overallRating != this.state.origOverallRating){
       userInfo['overall_rating'] = parseInt(this.state.overallRating)
@@ -57,6 +58,7 @@ class UpdateReviewScreen extends Component {
         return response.json()
       } else if (response.status === 400) {
         console.log('Bad request')
+        Alert.alert('All the forms need filling!')
       } else if (response.status === 401) {
         console.log('Unauthorised')
       } else if (response.status === 403) {
@@ -67,12 +69,11 @@ class UpdateReviewScreen extends Component {
         console.log('Something went wrong')
       }
     })
-    /*.then(async(responseJson) =>{
+    .then(async(responseJson) =>{
       console.log('Updated user details')
       await AsyncStorage.getItem('@session_token')
       console.log(responseJson)
-      this.props.navigation.navigate('User Info Screen')
-    })*/
+    })
     .catch((error) =>{
       console.log(error)
     })

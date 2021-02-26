@@ -74,7 +74,8 @@ class CoffidaApp extends Component {
             name='User Info Screen'
             component={UserInfoScreen}
             options={{
-              title: 'User Details'
+              title: 'User Details',
+              headerLeft: null
             }}
           />
           <Stack.Screen
@@ -154,7 +155,8 @@ function TabNav () {
         }}
       />
       <Tab.Screen
-        name='Log out' component={LogoutScreen} options={{
+        name='Log out' component={LogoutScreen}
+        options={{
           title: 'Logout'
         }}
       />

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, AsyncStorage, TouchableOpacity, ScrollView, TextInput, StyleSheet } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity, ScrollView, TextInput, StyleSheet } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 screen showing user's details 
 get request to get the user's details and results are set in state to be displayed in the render function 
@@ -13,7 +14,8 @@ class UserInfoScreen extends Component {
     }
   }
 
-  getData = async () =>{
+
+  getData = async () => {
     console.log('inside fuction')
     const token = await AsyncStorage.getItem('@session_token')
     const id = await AsyncStorage.getItem('@user_id')
@@ -60,6 +62,9 @@ class UserInfoScreen extends Component {
     const navigation = this.props.navigation
     return(
       <View style={styles.container}>
+        <TouchableOpacity style={styles.refreshButton} onPress={()=>this.getData()}>
+          <Text style={styles.boldText}>Refresh</Text>
+        </TouchableOpacity>
         <Text style={styles.text}>Email : {this.state.email}</Text>
         <Text style={styles.text}>First name : {this.state.firstName}</Text>
         <Text style={styles.text}>Last name : {this.state.lastName}</Text>
@@ -80,6 +85,14 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#272727',
 
+  },
+  refreshButton:{
+    borderWidth: 5,
+    borderColor: "#14a76c",
+    borderRadius: 6,
+    paddingVertical: 10,
+    marginTop: 10,
+    marginBottom: 10
   },
   button:{
     borderWidth: 5,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, AsyncStorage, StyleSheet } from 'react-native'
-
+import { Text, View, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 A screen for the user to logout
 A message will be made to the user before they logout asking if they really want to logout

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, AsyncStorage, TouchableOpacity, ActivityIndicator, ScrollView, TextInput, StyleSheet } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity, ActivityIndicator, ScrollView, TextInput, StyleSheet } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 screen for updating user info
 user is prompt to enter details by filling in the text inputs
@@ -17,7 +18,8 @@ class UserInfoScreen extends Component {
       origEmail: emailParam,
     }
   }
-  updateData = async () =>{
+
+  updateData = async () => {
     let userInfo = {}
     if(this.state.email != this.state.origEmail){
       userInfo['email'] = this.state.email
@@ -39,10 +41,9 @@ class UserInfoScreen extends Component {
     })
     .then((response) => {
       if (response.status === 200) {
-        console.log('Ok')
-        console.log(userInfo)
-        this.props.navigation.navigate('User Info Screen')
-        return response.json()
+        console.log('OK')
+        this.props.navigation.navigate('Home screen')
+        //return response.json()
       } else if (response.status === 400) {
         console.log('Bad request')
       } else if (response.status === 401) {
@@ -55,17 +56,15 @@ class UserInfoScreen extends Component {
         console.log('Something went wrong')
       }
     })
-    /*.then(async(responseJson) =>{
+    .then(async(responseJson) =>{
       console.log('Updated user details')
+      console.log(userInfo)
       await AsyncStorage.getItem('@session_token')
-      console.log(responseJson)
-      this.props.navigation.navigate('User Info Screen')
-    })*/
+    })
     .catch((error) =>{
       console.log(error)
     })
   }
-
 
   render(){
     return(

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, AsyncStorage, FlatList, PermissionsAndroid } from 'react-native'
-
+import { Text, View, TouchableOpacity, FlatList, PermissionsAndroid } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Geolocation from 'react-native-geolocation-service'
 
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'

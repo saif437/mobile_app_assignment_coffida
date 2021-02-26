@@ -1,5 +1,41 @@
 /* Functions for which can be reused elsewhere in this project */
 
+const coffidaProfanityWords = [
+  'tea',
+  'cakes',
+  'cake',
+  'pastries',
+  'sandwiches',
+  'soft drinks',
+  'water',
+  'smoothies',
+  'fruit',
+  'salads',
+  'food',
+  'coke',
+  'pepsi',
+  'fanta',
+  '7up',
+  'energy drink',
+  'red bull',
+  'lucozade',
+  'lemonade',
+  'brownies',
+  'muffins',
+  'toastie',
+  'breakfast',
+  'porridge',
+  'sweets',
+  'chocolate',
+  'crisps'
+]
+export function profanityFilter (review) {
+  const Filter = require('bad-words')
+  const filter = new Filter()
+  filter.addWords(...coffidaProfanityWords)
+  return filter.clean(review)
+}
+
 /* functions for validating emails and passwords - reference in create account screen */
 export function emailValidation (emailParam) {
   // regex express for validating emails
@@ -22,44 +58,4 @@ export function passwordValidation (passwordParam) {
     console.log('Password is not greater than 5 characters')
     return false
   }
-}
-
-export function profanityFilter (review) {
-  const Filter = require('bad-words')
-  const filter = new Filter()
-  filter.addWords(...profanityList())
-  return filter.clean(review)
-}
-
-function profanityList () {
-  const coffidaProfanityWords = [
-    'tea',
-    'cakes',
-    'cake',
-    'pastries',
-    'sandwiches',
-    'soft drinks',
-    'water',
-    'smoothies',
-    'fruit',
-    'salads',
-    'food',
-    'coke',
-    'pepsi',
-    'fanta',
-    '7up',
-    'energy drink',
-    'red bull',
-    'lucozade',
-    'lemonade',
-    'brownies',
-    'muffins',
-    'toastie',
-    'breakfast',
-    'porridge',
-    'sweets',
-    'chocolate',
-    'crisps'
-  ]
-  return coffidaProfanityWords
 }

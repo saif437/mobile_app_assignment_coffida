@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, StyleSheet} from 'react-native'
 import { RNCamera } from 'react-native-camera'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 screen for taking photos 
 photos are taken through the button displayed below 

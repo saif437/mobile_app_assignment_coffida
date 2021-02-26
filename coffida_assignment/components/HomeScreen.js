@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, AsyncStorage, FlatList, PermissionAndroid, Picker, StyleSheet, ScrollView } from 'react-native'
-
+import { Text, View, TouchableOpacity, FlatList, PermissionAndroid, Picker, StyleSheet, ScrollView } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 The main screen for this application, will show a list of locations of different coffee shops with their location 
 get request to retrieve a list of locations stored in responseJson
@@ -23,7 +23,7 @@ class HomeScreen extends Component {
     }
   }
 
-  getLocations = async () =>{
+  getLocations = async () => {
     const token = await AsyncStorage.getItem('@session_token')
     console.log(token)
     return fetch('http://10.0.2.2:3333/api/1.0.0/find',

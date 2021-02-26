@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, TouchableOpacity, AsyncStorage, ScrollView, Image, Alert, StyleSheet } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity, ScrollView, Image, Alert, StyleSheet } from 'react-native'
 import { Heart } from 'react-native-shapes'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 Majority of the app's functionality is implement here
 Average ratings and reviews are shown
@@ -97,6 +97,7 @@ class LocationInfoScreen extends Component {
       console.error(error)
     })
   }
+
   unFavouriteLocation = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
 
@@ -152,6 +153,7 @@ class LocationInfoScreen extends Component {
     .then((response) => {
       if (response.status === 200) {
         console.log('OK')
+        this.props.navigation.navigate('Home screen')
       }else if (response.status === 400){
         console.log('Bad request')
       } else if (response.status === 401){
@@ -168,8 +170,6 @@ class LocationInfoScreen extends Component {
     .then(async (responseJson) => {
       console.log('Deleted a review successfully')
       await AsyncStorage.getItem('@session_token')
-      this.props.navigation.navigate('Home screen')
-
     })
     .catch((error) => {
       console.error(error)
@@ -208,42 +208,46 @@ class LocationInfoScreen extends Component {
     })
   }
 
-  deletelike = async (locId, revId) => {
-    console.log(revId)
+  //check if user has liked it first
+  deletelike = async (locId, revId, likes) => {
     const token = await AsyncStorage.getItem('@session_token')
+    if( likes===0){
+      console.log('remove like is invalid')
+    }
+    else{
+      return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/like',
+      {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'X-Authorization':token }
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('OK')
+          this.props.navigation.navigate('Home screen')
+        } else if (response.status === 401){
+          console.log('Unauthorised')
+        } else if (response.status === 403){
+          console.log('Forbidden')
+          Alert.alert('You can only delete your own like!')
+        } else if (response.status === 404){
+          console.log('Not Found')
+        } else {
+          console.log('Something went wrong')
+        }
+      })
+      .then(async (responseJson) => {
+        console.log('Deleted like request done')
+        await AsyncStorage.getItem('@session_token')
 
-    return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/like',
-    {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', 'X-Authorization':token }
-    })
-    .then((response) => {
-      if (response.status === 200) {
-        console.log('OK')
-      } else if (response.status === 401){
-        console.log('Unauthorised')
-      } else if (response.status === 403){
-        console.log('Forbidden')
-        Alert.alert('You can only delete your own like!')
-      } else if (response.status === 404){
-        console.log('Not Found')
-      } else {
-        console.log('Something went wrong')
-      }
-    })
-    .then(async (responseJson) => {
-      console.log('Deleted a review successfully')
-      await AsyncStorage.getItem('@session_token')
-      this.props.navigation.navigate('Home screen')
-
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+    }
   }
+
    deletePhoto = async (locId, revId) => {
     const token = await AsyncStorage.getItem('@session_token')
-
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/photo',
     {
       method: 'DELETE',
@@ -256,7 +260,7 @@ class LocationInfoScreen extends Component {
         console.log('Unauthorised')
       } else if (response.status === 403){
         console.log('Forbidden')
-        Alert.alert('You can only delete your own review!')
+        Alert.alert('You can only delete your own photo!')
       } else if (response.status === 404){
         console.log('Not Found')
       } else {
@@ -350,7 +354,7 @@ getPhoto = async (locId, revId) => {
                   </TouchableOpacity>
                   <TouchableOpacity
                   style={styles.button}
-                  onPress={() => this.deletelike(locId,item.review_id)}>
+                  onPress={() => this.deletelike(locId,item.review_id,item.likes)}>
                     <Text style={styles.boldText}>remove like</Text>
                   </TouchableOpacity>   
                 </View>
@@ -432,10 +436,11 @@ const styles = StyleSheet.create({
     color: '#ff652f'
   },
   image:{
-    width: 100,
+    width: 75,
     height: 50,
     borderColor: "#14a76c",
     borderRadius: 6,
+
   },
   heart:{
     borderColor: "#14a76c",

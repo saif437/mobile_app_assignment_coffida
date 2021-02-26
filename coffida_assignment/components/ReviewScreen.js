@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, ScrollView, AsyncStorage, StyleSheet} from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, StyleSheet} from 'react-native'
 import { profanityFilter } from './helperFunctions'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 /*
 screen for adding reviews 
 user is prompt to enter details by filling in the text inputs
