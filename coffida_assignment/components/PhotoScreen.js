@@ -4,14 +4,16 @@ import { RNCamera } from 'react-native-camera'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 screen for taking photos 
-photos are taken through the button displayed below 
-post request to add photo to the api for it to be retrieve in a get request
-RnCamera is the camera functionality
 */
 class PhotoScreen extends Component {
   constructor (props) {
     super(props)
   }
+
+  /*
+  post request to add photo to the api 
+  and will navigate back to location screen
+  */
   addPhoto = async (locId, revId) => {
     const token = await AsyncStorage.getItem('@session_token')
     if(this.camera){
@@ -41,13 +43,18 @@ class PhotoScreen extends Component {
         .then(async(responseJson) => {
           console.log('photo added')
           await AsyncStorage.getItem('@session_token')
-          this.props.navigation.navigate('Home screen')
+          this.props.navigation.navigate('Location Info screen')
         })
         .catch((error) => {
           console.error(error)
         })
       }
     }
+
+  /*
+  RnCamera componentb implements the camera functionality.
+  Photos are taken through a button 
+  */
   render () {
     const { locId, revId } = this.props.route.params
     const navigation = this.props.navigation

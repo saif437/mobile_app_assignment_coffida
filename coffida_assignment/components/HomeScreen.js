@@ -2,18 +2,12 @@ import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, FlatList, PermissionAndroid, Picker, StyleSheet, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
-The main screen for this application, will show a list of locations of different coffee shops with their location 
-get request to retrieve a list of locations stored in responseJson
-async storage is used to access the user's session token which is generated everytime the user logs in
-will automatically call getLocations to display locations immediately 
-flatlist will loop through each element in location data to access information on each locations
-and have access to location ID's which will allowed the user to enter a specifc location
-conditional statement to add a filler text when data is loading 
-Allows users to filter results by sorting
+The main screen for this application, will show a list of locations of different coffee shops with their location details
 */
-
-
 class HomeScreen extends Component {
+  /*
+  locationData is where the location infomation is stored and will be retrieved
+  */
   constructor (props) {
     super(props)
     this.state = {
@@ -23,9 +17,13 @@ class HomeScreen extends Component {
     }
   }
 
+  /*
+  Get request to find locations and their information.
+  responseJson will contain the get request information and this will be added into 
+  locationData list to access in the render function
+  */
   getLocations = async () => {
     const token = await AsyncStorage.getItem('@session_token')
-    console.log(token)
     return fetch('http://10.0.2.2:3333/api/1.0.0/find',
     {
       method: 'GET',
@@ -54,11 +52,16 @@ class HomeScreen extends Component {
       console.log(error)
     })
   }
-
+  /*
+  As soon as the home screen is accessed, it will called getLocations to retrieve a list of locations
+  */
   componentDidMount () {
     this.getLocations()
   }
 
+  /*
+  A flatlist is used to access items in locationData list. This is displayd in a styled manner
+  */
   render () {
     const navigation = this.props.navigation
     if(this.state.isLoading){

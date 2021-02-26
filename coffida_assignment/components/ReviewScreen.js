@@ -1,13 +1,9 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, TextInput, ScrollView, StyleSheet} from 'react-native'
+import { Text, View, TouchableOpacity, TextInput, ScrollView, StyleSheet, Alert} from 'react-native'
 import { profanityFilter } from './helperFunctions'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 /*
-screen for adding reviews 
-user is prompt to enter details by filling in the text inputs
-the information is then stored in state to sent to a post request where the review is added to the api 
-post rquest to add review
-text in the Textinput is being stored in state 
+screen for adding reviews
 */
 class ReviewScreen extends Component {
   constructor (props) {
@@ -23,11 +19,12 @@ class ReviewScreen extends Component {
     }
   }
 
-
-
+  /*
+  Will send a post request to add a review and will navigate back to the location screen
+  */
   addReview = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
-    
+    Alert.alert('Refresh screen after submitting review')
     return fetch('http://10.0.2.2:3333/api/1.0.0/Location/'  + locId + '/review',
       {
         method: 'POST',
@@ -56,13 +53,16 @@ class ReviewScreen extends Component {
       .then(async(responseJson) => {
         console.log('review sumbited')
         await AsyncStorage.getItem('@session_token')
-        this.props.navigation.navigate('Home screen')
+        this.props.navigation.navigate('Location Info screen')
       })
       .catch((error) => {
         console.error(error)
       })
   }
 
+  /*
+  Will display textInputs for the user to type the relevant information and has biuttons to complete requests
+  */
   render () {
     const { locId, revId } = this.props.route.params
     const navigation = this.props.navigation

@@ -6,8 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 screen for updating reviews 
 user is prompt to enter details by filling in the text inputs
 the information is then stored in state to sent to a patch request where the review is updated in the api
-before the data is sent each state is check their original state and compared to see if any changes are made
-if changes are made a empty list called userInfor get the change state appended to it and sent as the body of the patch request 
 */
 class UpdateReviewScreen extends Component {
   constructor (props) {
@@ -23,6 +21,12 @@ class UpdateReviewScreen extends Component {
 
     }
   }
+  /*
+  sends a patch reques to update a user's review.
+  Handles request for invalid and for updating someone else's review.
+  Before the data is sent each state is check by their original state and compared to see if any changes are made,
+  if changes are made, a empty list called userInfor gets the change state appended to it and sent as the body of the patch request. 
+  */
   updateData = async (locId, revId) => {
     let userInfo = {}
     if(this.state.overallRating != this.state.origOverallRating){
@@ -42,7 +46,7 @@ class UpdateReviewScreen extends Component {
     }
     console.log(userInfo)
     const token = await AsyncStorage.getItem('@session_token')
-
+    Alert.alert('Refresh screen after updating review')
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/'  + locId + '/review/' + revId,
     {
       method: 'PATCH',
@@ -54,7 +58,6 @@ class UpdateReviewScreen extends Component {
         console.log('Ok')
         console.log(userInfo)
         //console.log(response.json())
-        this.props.navigation.navigate('Home screen')
         return response.json()
       } else if (response.status === 400) {
         console.log('Bad request')
@@ -63,6 +66,7 @@ class UpdateReviewScreen extends Component {
         console.log('Unauthorised')
       } else if (response.status === 403) {
         console.log('Forbidden')
+        Alert.alert('You can only update your own review')
       } else if (response.status === 404) {
         console.log('Not found')
       } else {
@@ -73,12 +77,17 @@ class UpdateReviewScreen extends Component {
       console.log('Updated user details')
       await AsyncStorage.getItem('@session_token')
       console.log(responseJson)
+      this.props.navigation.navigate('Location Info screen')
+
     })
     .catch((error) =>{
       console.log(error)
     })
   }
 
+  /*
+  Will display textInputs for the user to type the relevant information and has biuttons to complete requests
+  */
   render () {
     const { locId, revId } = this.props.route.params
     const navigation = this.props.navigation

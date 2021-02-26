@@ -14,7 +14,10 @@ class UserInfoScreen extends Component {
     }
   }
 
-
+  /*
+  Get request to display user details.
+  Will update state with items in responeJson 
+  */
   getData = async () => {
     console.log('inside fuction')
     const token = await AsyncStorage.getItem('@session_token')
@@ -55,21 +58,28 @@ class UserInfoScreen extends Component {
     })
   }
 
+  /*
+  Calls getData as soon as screen is loaded
+  */
   componentDidMount () {
     this.getData()
   }
+
+  /*
+  Will display user details in styled manner and has a refresh button to see updated changes
+  */
   render(){
     const navigation = this.props.navigation
     return(
       <View style={styles.container}>
-        <TouchableOpacity style={styles.refreshButton} onPress={()=>this.getData()}>
+        <TouchableOpacity style={styles.button} onPress={()=>this.getData()}>
           <Text style={styles.boldText}>Refresh</Text>
         </TouchableOpacity>
         <Text style={styles.text}>Email : {this.state.email}</Text>
         <Text style={styles.text}>First name : {this.state.firstName}</Text>
         <Text style={styles.text}>Last name : {this.state.lastName}</Text>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Update User Info screen',{emailParam:this.state.email,
-          firstNameParam:this.state.firstName, lastNameParam:this.state.lastName,})}>
+          firstNameParam:this.state.firstName, lastNameParam:this.state.lastName})}>
           <Text style={styles.boldText}>Update Details</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('Home screen')}>
@@ -85,14 +95,6 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#272727',
 
-  },
-  refreshButton:{
-    borderWidth: 5,
-    borderColor: "#14a76c",
-    borderRadius: 6,
-    paddingVertical: 10,
-    marginTop: 10,
-    marginBottom: 10
   },
   button:{
     borderWidth: 5,

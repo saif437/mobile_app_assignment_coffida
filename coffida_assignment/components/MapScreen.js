@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, FlatList, PermissionsAndroid } from 'react-native'
+import { Text, View, TouchableOpacity, FlatList, PermissionsAndroid, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Geolocation from 'react-native-geolocation-service'
 
@@ -24,6 +24,10 @@ class MapScreen extends Component {
     }
   }
 
+  /*
+  Will find the call the request location function to request permission.
+  Then will find and set the long and lat to state
+  */
   findCoordinates (latitude, longitude) {
     if(!this.state.locationPermission){
       this.state.locationPermission=this.requestLocationPermission();
@@ -50,6 +54,9 @@ class MapScreen extends Component {
       )
   }
 
+  /*
+  Will check if the permissions are correct and accepted
+  */
   requestLocationPermission = async () => {
     try{
       const granted = await PermissionsAndroid.request(
@@ -67,6 +74,7 @@ class MapScreen extends Component {
           return true
         } else{
           console.log('Location permission denied')
+          Alert.alert('You can access this feature')
           return false        
         }
       } catch(err){
@@ -74,10 +82,17 @@ class MapScreen extends Component {
     }
   }
 
+  /*
+  Will call findCoordinates immediately once screen is loaded
+  */
   componentDidMount () {
     const { latitude, longitude } = this.props.route.params
     this.findCoordinates(latitude, longitude)
   }
+
+  /*
+  MapView is where the maps is displayed
+  */
   render () {
     const navigation = this.props.navigation
     return(

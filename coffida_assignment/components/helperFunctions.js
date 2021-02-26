@@ -1,5 +1,8 @@
 /* Functions for which can be reused elsewhere in this project */
 
+/*
+coffidaProfanityWords is a list of words which are not allowed in coffida reviews
+*/
 const coffidaProfanityWords = [
   'tea',
   'cakes',
@@ -29,6 +32,14 @@ const coffidaProfanityWords = [
   'chocolate',
   'crisps'
 ]
+
+/*
+profanityFilter function import a package called bad words.
+which has a default list of associate bad words.
+coffidaProfanityWords is added to the filter list.
+A review parameter is added so that the filter knows what piece of text it is cleaning.
+Bads words are replace with * by default after review is cleaned.
+*/
 export function profanityFilter (review) {
   const Filter = require('bad-words')
   const filter = new Filter()
@@ -36,9 +47,10 @@ export function profanityFilter (review) {
   return filter.clean(review)
 }
 
-/* functions for validating emails and passwords - reference in create account screen */
+/* functions for validating emails and passwords - reference in create account screen.
+  Uses regex expressions to validate an email.
+*/
 export function emailValidation (emailParam) {
-  // regex express for validating emails
   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   if (emailRegex.test(emailParam) === true) {
     console.log('Email is valid')
@@ -49,8 +61,10 @@ export function emailValidation (emailParam) {
   }
 }
 
+/*
+function for validating passwords greater than 5 characters (zero index)
+*/
 export function passwordValidation (passwordParam) {
-// password validation greater than 5 characters (zero index)
   if (passwordParam.length >= 5) {
     console.log('Password is valid')
     return true

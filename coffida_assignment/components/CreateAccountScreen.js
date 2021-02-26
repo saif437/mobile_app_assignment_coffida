@@ -4,9 +4,9 @@ import { Text, View, TouchableOpacity, TextInput, ScrollView, StyleSheet } from 
 import { emailValidation, passwordValidation } from './helperFunctions'
 
 /*
-This screen will provide the user to create an account by providing text input field for the user to register
-and a post request will be made to create a new user details. ResponseJson will be where the details are stored
-checks for validation for correct emails and password before account can be created and sent to the API
+Create account assist users in registering an account by displaying text input
+ components to prompt the user to enter their details and a post request is sent to
+ the api create the account
  */
 class CreateAccountScreen extends Component {
   constructor (props) {
@@ -19,12 +19,20 @@ class CreateAccountScreen extends Component {
     }
   }
 
+  /*
+  createAccount function will validate the user's email and password
+  by checking an external function called emailValidation and PasswordValidation.
+  Will proceed to post request if successful.
+  */
   createAccount (emailParam, passwordParam) {
     if (emailValidation(emailParam) === true && passwordValidation(passwordParam) === true) {
       this.postRequest()
     }
   }
 
+  /*
+  posts request which returns 201 if succesffull or 400 if validations is not correct
+  */
   postRequest () {
     return fetch('http://10.0.2.2:3333/api/1.0.0/user',
       {

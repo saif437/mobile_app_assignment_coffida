@@ -19,9 +19,8 @@ import UpdateUserInfoScreen from './components/UpdateUserInfoScreen'
 import UpdateReviewScreen from './components/UpdateReviewScreen'
 
 /*
-implementing and stack and tab navigators
-Tab navigator only visible in Home Screen
-added some styling to the navigator
+App.js contains the navigation structors.
+Stack and Tab navigations are implemented.
 */
 class CoffidaApp extends Component {
   render () {
@@ -48,6 +47,8 @@ class CoffidaApp extends Component {
               title: 'Coffida'
             }}
           />
+          {/* Home screen back navigator is nulled to prevent going backs.
+          Home screen stack will show Tab navigations */}
           <Stack.Screen
             name='Home screen'
             component={TabNav}
@@ -70,11 +71,12 @@ class CoffidaApp extends Component {
               title: 'Review'
             }}
           />
+          {/* User details screen back navigator is nulled to prevent going backs */}
           <Stack.Screen
             name='User Info Screen'
             component={UserInfoScreen}
             options={{
-              title: 'User Details',
+              title: 'My Details',
               headerLeft: null
             }}
           />
@@ -120,8 +122,7 @@ class CoffidaApp extends Component {
 }
 
 /*
-Tab navigator
-Added some styling to the tab navigator
+Tab navigators to access Home screen, user details and Logout screen
 */
 const Tab = createBottomTabNavigator()
 
@@ -151,7 +152,7 @@ function TabNav () {
       <Tab.Screen
         name='User Info Screen' component={UserInfoScreen}
         options={{
-          title: 'UserDetails'
+          title: 'My Details'
         }}
       />
       <Tab.Screen

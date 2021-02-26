@@ -3,24 +3,23 @@ import { Text, View, FlatList, TouchableOpacity, ScrollView, Image, Alert, Style
 import { Heart } from 'react-native-shapes'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
-Majority of the app's functionality is implement here
-Average ratings and reviews are shown
-And functionality surrounding a specific location is also added 
-get request to retrieve information about a specific location 
-once data is retrieved, it is stored in state with the relevant names
-send post request to the api to favourite a location
-ends a delete request to the api to unfavourite a location
-handles the favourite state by setting it to the opposite boolean value of current state
-determines whether the user has favourited or unfavourited by its value (true or false) 
-a location and callsthe right api call depending on the state value
-api called to delete the user's review 
-will only let a user delete its own reviews
-post request to allow the user to like a review
-delete request to remove the user's like of a review
-send a delete request to the api to delete their photo
-shows a blank image when the user hasn't uploaded a photo
+Majority of the app's functionality is implement here and paves ways for other functionality:
+.Get Location Info
+.Favourite a location
+.Unfavourite a location
+.Add reviews
+.Update reviews
+.Delete reviews
+.Add photos
+.Delete photos
+.Like reviews
+.Unlike reviews
 */
 class LocationInfoScreen extends Component {
+  /*
+  LocationReviews is list which will stores reviews
+  imageUri is where the uri path is stored and will update to the correct path when a photo is addded
+  */
   constructor (props) {
     super(props)
     this.state = {
@@ -32,6 +31,9 @@ class LocationInfoScreen extends Component {
     }
   }
 
+  /*
+  Get request to access location details and the information retrieved is stored in state in the relevant names.
+  */
   getSpecificLocation (locId) {
 
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId,
@@ -66,7 +68,11 @@ class LocationInfoScreen extends Component {
     .catch((error) => {
       console.log(error)
     })
-}
+  }
+
+  /*
+  Post request to favourite a location
+  */
   favouriteLocation = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
 
@@ -98,6 +104,9 @@ class LocationInfoScreen extends Component {
     })
   }
 
+  /*
+  Delete request to unfavourite a location
+  */
   unFavouriteLocation = async (locId) => {
     const token = await AsyncStorage.getItem('@session_token')
 
@@ -128,6 +137,10 @@ class LocationInfoScreen extends Component {
     })
   }
 
+  /*
+  This function will set the favourite state to the opposite boolean value,
+  then call handleFavouriteBool().
+  */
   handleFavourite = () => {
     this.setState({
       favourite: !this.state.favourite
@@ -135,12 +148,20 @@ class LocationInfoScreen extends Component {
     this.handleFavouriteBool()
   }
 
+  /*
+  This function will determin whether the user wants to favourite or unfavourite a location,
+  and sends called the function to complete the api request.
+  */
   handleFavouriteBool = () => {
     console.log(this.state.favourite)
     const { locId } = this.props.route.params
     this.state.favourite ? this.unFavouriteLocation(locId) : this.favouriteLocation(locId)
   }
 
+  /*
+  Will send a delete request to remove a user's own review and will handle any invalid requests,
+  such as deleting someone else's review.
+  */
   deleteReview = async (locId, revId) => {
     console.log(revId)
     const token = await AsyncStorage.getItem('@session_token')
@@ -153,7 +174,6 @@ class LocationInfoScreen extends Component {
     .then((response) => {
       if (response.status === 200) {
         console.log('OK')
-        this.props.navigation.navigate('Home screen')
       }else if (response.status === 400){
         console.log('Bad request')
       } else if (response.status === 401){
@@ -170,12 +190,16 @@ class LocationInfoScreen extends Component {
     .then(async (responseJson) => {
       console.log('Deleted a review successfully')
       await AsyncStorage.getItem('@session_token')
+      this.getSpecificLocation(locId)
     })
     .catch((error) => {
       console.error(error)
     })
   }
 
+  /*
+  Will send a post request to like a review
+  */
   likeReview = async (locId, revId) => {
     const token = await AsyncStorage.getItem('@session_token')
 
@@ -201,14 +225,16 @@ class LocationInfoScreen extends Component {
     .then(async (responseJson) => {
       console.log('Liked a review successfully')
       await AsyncStorage.getItem('@session_token')
-      this.props.navigation.navigate('Home screen')
+      this.getSpecificLocation(locId)
     })
     .catch((error) => {
       console.error(error)
     })
   }
 
-  //check if user has liked it first
+  /*
+  Will send a delete request to remove a like and will handle any request to remove likes which are not theirs.
+  */
   deletelike = async (locId, revId, likes) => {
     const token = await AsyncStorage.getItem('@session_token')
     if( likes===0){
@@ -223,7 +249,6 @@ class LocationInfoScreen extends Component {
       .then((response) => {
         if (response.status === 200) {
           console.log('OK')
-          this.props.navigation.navigate('Home screen')
         } else if (response.status === 401){
           console.log('Unauthorised')
         } else if (response.status === 403){
@@ -238,7 +263,7 @@ class LocationInfoScreen extends Component {
       .then(async (responseJson) => {
         console.log('Deleted like request done')
         await AsyncStorage.getItem('@session_token')
-
+        this.getSpecificLocation(locId)
       })
       .catch((error) => {
         console.error(error)
@@ -246,6 +271,10 @@ class LocationInfoScreen extends Component {
     }
   }
 
+  /*
+  Will send a delete request to remove a photo and will handle any attempts to delete someone else's photo and non existent photos.
+  Once Image is delete the URI is change in state to the original path
+  */
    deletePhoto = async (locId, revId) => {
     const token = await AsyncStorage.getItem('@session_token')
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/photo',
@@ -260,7 +289,7 @@ class LocationInfoScreen extends Component {
         console.log('Unauthorised')
       } else if (response.status === 403){
         console.log('Forbidden')
-        Alert.alert('You can only delete your own photo!')
+        Alert.alert('You can only delete your someone elses photo!')
       } else if (response.status === 404){
         console.log('Not Found')
       } else {
@@ -279,7 +308,12 @@ class LocationInfoScreen extends Component {
     })
   }
 
-getPhoto = async (locId, revId) => {
+  /*
+  Will send a get request to a get a photo for a review 
+  and will handle any photos being added to someone else's review
+  Will also set the right uri path to state to display the correct image
+  */
+  getPhoto = async (locId, revId) => {
 
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/' + locId + '/review' + '/' + revId + '/photo',
     {
@@ -303,14 +337,23 @@ getPhoto = async (locId, revId) => {
     })
   }
 
+  /*
+  Will called getSpecificLocation to access location information and reviews,
+  once this screen is navigated to.
+  */
   componentDidMount () {
     const { locId } = this.props.route.params
     this.getSpecificLocation(locId)
   }
 
+  /*
+  render function displays the information and 
+  uses a flatlist to display reviews and add review fucntionality. 
+  */
   render () {
     const { locId } = this.props.route.params
     const navigation = this.props.navigation
+    {/*Wil change the color of the heart depending on the state of favourite*/}
     const heartColor = this.state.favourite ? 'red' : 'grey'
     if (this.state.isLoading) {
       return (
@@ -321,6 +364,9 @@ getPhoto = async (locId, revId) => {
     } else {
       return (
         <View style={styles.container}>
+          <TouchableOpacity style={styles.button} onPress={()=>this.getSpecificLocation(locId)}>
+            <Text style={styles.boldText}>Refresh</Text>
+          </TouchableOpacity>
           <Text style={styles.boldText}>Average clenliness rating : {this.state.avgClenlinessRating}</Text>
           <Text style={styles.boldText}>Average overall rating : {this.state.avgOverallRating}</Text>
           <Text style={styles.boldText}>Average price rating : {this.state.avgPriceRating}</Text>
@@ -340,7 +386,6 @@ getPhoto = async (locId, revId) => {
               <Heart style={styles.heart} color={heartColor}/>
             </TouchableOpacity>
           </View>
-
           <FlatList
             data={this.state.locationReviews}
             renderItem={({ item }) => (

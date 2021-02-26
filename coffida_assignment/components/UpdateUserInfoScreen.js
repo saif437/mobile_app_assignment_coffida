@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, TouchableOpacity, ActivityIndicator, ScrollView, TextInput, StyleSheet } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity, ActivityIndicator, ScrollView, TextInput, StyleSheet, Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 /* 
 screen for updating user info
@@ -19,15 +19,20 @@ class UserInfoScreen extends Component {
     }
   }
 
+  /*
+  Sends a patch request to udate user details.
+  Will prompt the user to refresh the page afterwards to see changes 
+  */
   updateData = async () => {
+    Alert.alert('Refresh page after updating details')
     let userInfo = {}
     if(this.state.email != this.state.origEmail){
       userInfo['email'] = this.state.email
     }
-    if(this.state.firstName != this.state.origFirstName){
+    else if(this.state.firstName != this.state.origFirstName){
       userInfo['first_name'] = this.state.firstName
     }
-    if(this.state.lastName != this.state.lastName){
+    else if(this.state.lastName != this.state.origLastName){
       userInfo['last_name'] = this.state.lastName
     }
     const token = await AsyncStorage.getItem('@session_token')
@@ -65,7 +70,9 @@ class UserInfoScreen extends Component {
       console.log(error)
     })
   }
-
+  /*
+  Will display textInputs for the user to type the relevant information and has biuttons to complete requests
+  */
   render(){
     return(
       <View style={styles.container}>
